@@ -78,6 +78,12 @@ Resolved: Q1 to Q8 (see D6 to D12).
 
 ## 6. Iteration Log
 
+### Iteration 3: 2026-10-05 (published + store-interior groundwork)
+- **Published** to https://github.com/scmarcus-io/gilmore (public). Commits use the GitHub noreply email so no work email or hostname is public.
+- **Deploy:** `.github/workflows/deploy.yml` builds with Vite and publishes `dist/` to GitHub Pages on every push to `main`. Pages must be enabled once in repo Settings (Source: GitHub Actions).
+- **Decisions:** Weston's = things made by hand (baking + pottery); Dragonfly Inn stays Projects; the No Cell Phones toggle is gone and is now a static sign with Luke's greeting on entry; clouds removed.
+- **In progress:** store interiors (each store gets its own background plus a clickable item that opens the details pop-up), door-opening walk-in animation, background music (official YouTube embed with a music on/off icon). Shared parts are in `src/sections/parts.js` and `src/stores/art.js`; skip-the-tour layout unchanged.
+
 ### Iteration 2: 2026-10-03 (working prototype)
 - Built Vite + vanilla JS prototype in this folder. `npm run dev` to run.
 - **Map:** 2400x1500 SVG town; pan by drag, wheel/trackpad, or arrow keys; buildings are `<button>`s with hover lift + name tags; clouds drift as a parallax layer.
