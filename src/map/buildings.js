@@ -1,5 +1,6 @@
 // Original "inspired-by" SVG illustrations for each town building (D3: no show assets).
-// Each entry: { width, height, svg } in world pixels. Colors come from CSS custom properties.
+// Each entry: { width, height, door: { x, y, color }, svg }. door.x/y = front door as a fraction
+// of width/height (the camera zooms toward it); door.color tints the door-opening transition.
 
 const sign = (x, y, w, text, fill = 'var(--cream)', ink = 'var(--coffee)') => `
   <rect x="${x}" y="${y}" width="${w}" height="26" rx="3" fill="${fill}" stroke="var(--coffee)" stroke-width="2"/>
@@ -20,7 +21,7 @@ const awning = (x, y, w, a, b, stripes = 8) => {
 
 export const buildings = {
   gazebo: {
-    width: 280, height: 250,
+    width: 280, height: 250, door: { x: 0.5, y: 0.75, color: 'var(--forest)' },
     svg: `
       <ellipse cx="140" cy="236" rx="138" ry="14" fill="var(--shadow)"/>
       <rect x="30" y="206" width="220" height="26" fill="var(--white-paint)" stroke="var(--trim-dark)" stroke-width="2"/>
@@ -36,7 +37,7 @@ export const buildings = {
   },
 
   lukes: {
-    width: 300, height: 260,
+    width: 300, height: 260, door: { x: 0.56, y: 0.78, color: 'var(--door)' },
     svg: `
       <ellipse cx="150" cy="250" rx="148" ry="10" fill="var(--shadow)"/>
       <rect x="10" y="40" width="280" height="208" fill="var(--brick)"/>
@@ -54,7 +55,7 @@ export const buildings = {
   },
 
   westons: {
-    width: 230, height: 230,
+    width: 230, height: 230, door: { x: 0.72, y: 0.78, color: 'var(--door-green)' },
     svg: `
       <ellipse cx="115" cy="220" rx="112" ry="9" fill="var(--shadow)"/>
       <rect x="12" y="52" width="206" height="166" fill="var(--butter)"/>
@@ -68,7 +69,7 @@ export const buildings = {
   },
 
   dragonfly: {
-    width: 420, height: 320,
+    width: 420, height: 320, door: { x: 0.49, y: 0.82, color: 'var(--door)' },
     svg: `
       <ellipse cx="210" cy="308" rx="206" ry="12" fill="var(--shadow)"/>
       <rect x="40" y="110" width="320" height="196" fill="var(--inn)"/>
@@ -91,7 +92,7 @@ export const buildings = {
   },
 
   dooses: {
-    width: 320, height: 240,
+    width: 320, height: 240, door: { x: 0.5, y: 0.76, color: 'var(--door-green)' },
     svg: `
       <ellipse cx="160" cy="230" rx="158" ry="10" fill="var(--shadow)"/>
       <rect x="10" y="48" width="300" height="180" fill="var(--white-paint)"/>
@@ -108,7 +109,7 @@ export const buildings = {
   },
 
   bookstore: {
-    width: 200, height: 260,
+    width: 200, height: 260, door: { x: 0.74, y: 0.82, color: 'var(--ink)' },
     svg: `
       <ellipse cx="100" cy="250" rx="98" ry="9" fill="var(--shadow)"/>
       <rect x="14" y="30" width="172" height="218" fill="var(--brick-dark)"/>
@@ -123,7 +124,7 @@ export const buildings = {
   },
 
   pattys: {
-    width: 260, height: 240,
+    width: 260, height: 240, door: { x: 0.5, y: 0.86, color: 'var(--roof-plum)' },
     svg: `
       <ellipse cx="130" cy="230" rx="128" ry="10" fill="var(--shadow)"/>
       <rect x="12" y="56" width="236" height="172" fill="var(--lavender)"/>

@@ -47,27 +47,24 @@
 .diner-menu__name { font-weight: 600; }
 .diner-menu__dots { flex: 1; border-bottom: 2px dotted var(--coffee-soft); transform: translateY(-4px); }
 .diner-menu__note { font-family: var(--font-type); font-size: .92rem; }
-.diner-menu__rules {
-  float: right; width: min(260px, 100%); margin: 8px 0 12px 18px; padding: 12px 14px;
-  background: #fff; border: 2px solid var(--flannel); border-radius: 6px; transform: rotate(1.5deg);
+/* "No cell phones" sign: a static house rule, not a control. */
+.no-phones {
+  float: right; display: inline-flex; align-items: center; gap: 10px; margin: 8px 0 12px 18px;
+  padding: 8px 16px; border: 3px solid var(--flannel); border-radius: 6px; background: #fff;
+  color: var(--flannel-dark); font: 800 .95rem var(--font-display); letter-spacing: .1em; text-transform: uppercase;
+  transform: rotate(2deg);
 }
-.diner-menu__rule-title { margin: 0 0 6px; font: 800 .9rem var(--font-display); text-transform: uppercase; letter-spacing: .12em; color: var(--flannel-dark); }
-.diner-menu__rule-status { margin: 6px 0 0; font-size: .85rem; color: var(--coffee-soft); }
-@media (max-width: 640px) { .diner-menu__rules { float: none; margin: 16px 0; transform: none; } }
-
-/* Toggle switch (native checkbox underneath for a11y) */
-.toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; min-height: 44px; }
-.toggle__input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.toggle__track {
-  flex: none; width: 50px; height: 28px; border-radius: 999px; background: #8a817a; position: relative; transition: background .2s;
+.no-phones__icon {
+  position: relative; width: 22px; height: 22px; border: 3px solid var(--flannel); border-radius: 50%;
 }
-.toggle__thumb {
-  position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s;
+.no-phones__icon::before { /* phone */
+  content: ''; position: absolute; inset: 3px 6px; border: 2px solid var(--coffee); border-radius: 2px;
 }
-.toggle__input:checked + .toggle__track { background: var(--flannel); }
-.toggle__input:checked + .toggle__track .toggle__thumb { transform: translateX(22px); }
-.toggle__input:focus-visible + .toggle__track { outline: var(--focus); outline-offset: 3px; }
-.toggle__label { font-weight: 600; }
+.no-phones__icon::after { /* slash */
+  content: ''; position: absolute; left: 50%; top: -2px; width: 3px; height: 22px; margin-left: -1.5px;
+  background: var(--flannel); transform: rotate(45deg);
+}
+@media (max-width: 640px) { .no-phones { float: none; margin: 16px 0; transform: none; } }
 
 /* Luke's speech bubble */
 .luke-bubble {

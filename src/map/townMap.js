@@ -2,10 +2,12 @@
 import { locations } from '../data/content.js';
 import { buildings } from './buildings.js';
 import { WORLD, placements, sceneryMarkup } from './scenery.js';
+import { afterTransition, prefersReducedMotion } from '../lib/util.js';
 
 const DRAG_THRESHOLD = 6; // px moved before a press counts as a drag, not a click
 const KEY_STEP = 80;
-const CLOUD_PARALLAX = 0.35; // clouds move slower than the ground, which reads as depth
+const DOOR_ZOOM = 2.8; // how close the camera gets to a front door when you walk in
+const ZOOM_MS = 750;
 
 const buildingButton = ({ id, name, section }) => {
   const { width, height, svg } = buildings[id];
@@ -18,9 +20,6 @@ const buildingButton = ({ id, name, section }) => {
     </button>`;
 };
 
-const cloudsMarkup = () => Array.from({ length: 7 }, (_, i) => `
-  <div class="cloud" style="left:${i * 420 + (i % 2) * 120}px;top:${60 + (i % 3) * 380}px;--s:${0.8 + (i % 3) * 0.3}"></div>`).join('');
-
 export function createTownMap(root, { onEnter }) {
   root.innerHTML = `
     <div class="town" tabindex="0" role="region" aria-label="Town map. Use arrow keys or drag to look around. Tab to buildings and press Enter to go inside.">
@@ -28,12 +27,10 @@ export function createTownMap(root, { onEnter }) {
         ${sceneryMarkup()}
         ${locations.map(buildingButton).join('')}
       </div>
-      <div class="town__clouds" aria-hidden="true">${cloudsMarkup()}</div>
     </div>`;
 
   const viewport = root.querySelector('.town');
   const world = root.querySelector('.town__world');
-  const clouds = root.querySelector('.town__clouds');
   const pos = { x: 0, y: 0 };
 
   const clamp = () => {
@@ -44,7 +41,25 @@ export function createTownMap(root, { onEnter }) {
   const apply = () => {
     clamp();
     world.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-    clouds.style.transform = `translate3d(${pos.x * CLOUD_PARALLAX}px, ${pos.y * CLOUD_PARALLAX}px, 0)`;
+  };
+
+  // Walk-in camera: zoom toward a building's front door. Pan position is untouched,
+  // so zoomOut() returns to exactly where the visitor was standing.
+  const zoomDuration = () => (prefersReducedMotion() ? 0 : ZOOM_MS + 150);
+  const zoomToDoor = (id) => {
+    const { x, y } = placements[id];
+    const { width, height, door } = buildings[id];
+    const doorX = x + width * door.x;
+    const doorY = y + height * door.y;
+    viewport.classList.add('is-zooming');
+    world.style.transform = `translate3d(${viewport.clientWidth / 2 - doorX * DOOR_ZOOM}px, ${
+      viewport.clientHeight / 2 - doorY * DOOR_ZOOM}px, 0) scale(${DOOR_ZOOM})`;
+    return afterTransition(world, zoomDuration());
+  };
+  const zoomOut = async () => {
+    apply();
+    await afterTransition(world, zoomDuration());
+    viewport.classList.remove('is-zooming');
   };
 
   const lookAt = (worldX, worldY) => {
@@ -118,5 +133,8 @@ export function createTownMap(root, { onEnter }) {
 
   window.addEventListener('resize', apply);
 
-  return { centerOn, lookAt, refresh: apply };
+  const buttonFor = (id) => viewport.querySelector(`[data-location="${id}"]`);
+  const setInert = (value) => { viewport.inert = value; };
+
+  return { centerOn, lookAt, zoomToDoor, zoomOut, buttonFor, setInert, refresh: apply };
 }

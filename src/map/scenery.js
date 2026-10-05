@@ -1,5 +1,6 @@
 // Static scenery for the town map: ground, roads, square, trees, leaves.
 // Seeded RNG keeps tree placement identical between loads (no layout jitter).
+import { mulberry32 } from '../lib/util.js';
 
 export const WORLD = { width: 2400, height: 1500 };
 
@@ -16,13 +17,6 @@ export const placements = {
   dooses: { x: 1660, y: 238 },
   pattys: { x: 560, y: 1000 },
   dragonfly: { x: 1660, y: 990 },
-};
-
-const mulberry32 = (seed) => () => {
-  let t = (seed += 0x6d2b79f5);
-  t = Math.imul(t ^ (t >>> 15), t | 1);
-  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
 const TREE_COLORS = ['var(--leaf-red)', 'var(--leaf-orange)', 'var(--leaf-gold)', 'var(--forest)', 'var(--leaf-rust)'];
