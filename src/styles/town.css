@@ -1,0 +1,80 @@
+/* Town map view: viewport, world, buildings, clouds, effects overlays. */
+.town-root { position: fixed; inset: var(--header-h) 0 0 0; }
+.town {
+  position: absolute; inset: 0; overflow: hidden; cursor: grab;
+  background: linear-gradient(#cfe3ea, #f3dcb3); touch-action: none; user-select: none;
+}
+.town.is-dragging { cursor: grabbing; }
+.town:focus-visible { outline-offset: -6px; }
+.town__world { position: absolute; top: 0; left: 0; will-change: transform; transition: transform .08s linear; }
+.town.is-dragging .town__world { transition: none; }
+.town-scenery { position: absolute; inset: 0; display: block; }
+
+.bldg-sign { font: 800 15px var(--font-display); letter-spacing: .06em; }
+.bldg-small { font: 700 11px var(--font-body); letter-spacing: .12em; }
+
+/* ---------- Buildings ---------- */
+.building {
+  position: absolute; padding: 0; border: 0; background: none; cursor: pointer;
+  transform-origin: 50% 100%; transition: transform .2s ease, filter .2s ease;
+}
+.building svg { display: block; overflow: visible; pointer-events: none; }
+.building:hover, .building:focus-visible {
+  transform: translateY(-8px) scale(1.04);
+  filter: drop-shadow(0 0 14px rgba(255, 224, 138, .95)) drop-shadow(0 12px 10px rgba(0, 0, 0, .25));
+}
+.building:focus-visible { outline: 4px solid #1a5fb4; outline-offset: 6px; border-radius: 8px; }
+
+/* Name tag: hidden until hover/focus so the map stays clean, always shown on touch. */
+.building__tag {
+  position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translate(-50%, 6px);
+  white-space: nowrap; padding: 6px 14px; border-radius: 8px;
+  background: var(--coffee); color: var(--cream);
+  font: 700 .95rem var(--font-display); text-align: center; line-height: 1.2;
+  opacity: 0; transition: opacity .2s ease, transform .2s ease; pointer-events: none;
+}
+.building__tag small { display: block; font: 400 .78rem var(--font-body); opacity: .9; }
+.building:hover .building__tag, .building:focus-visible .building__tag { opacity: 1; transform: translate(-50%, 0); }
+@media (hover: none) { .building__tag { opacity: 1; transform: translate(-50%, 0); } }
+
+.twinkle { animation: twinkle 2.4s ease-in-out infinite alternate; }
+.twinkle:nth-child(even) { animation-delay: 1.2s; }
+@keyframes twinkle { to { opacity: .45; } }
+
+/* ---------- Clouds (parallax layer) ---------- */
+.town__clouds { position: absolute; inset: 0; pointer-events: none; will-change: transform; }
+.cloud {
+  position: absolute; width: 180px; height: 56px; border-radius: 50px;
+  background: rgba(255, 255, 255, .22); transform: scale(var(--s)); filter: blur(2px);
+  animation: drift 40s linear infinite alternate;
+}
+.cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+.cloud::before { width: 80px; height: 80px; top: -38px; left: 26px; }
+.cloud::after { width: 60px; height: 60px; top: -26px; right: 30px; }
+@keyframes drift { to { translate: 120px 0; } }
+
+/* ---------- Map hint ---------- */
+.map-hint {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 10; margin: 0;
+  padding: 8px 18px; border-radius: 999px; background: rgba(59, 42, 31, .88); color: var(--cream);
+  font-size: .9rem; pointer-events: none; animation: fade-hint 1s ease 8s forwards;
+}
+.mode-list .map-hint { display: none; }
+@keyframes fade-hint { to { opacity: 0; } }
+@media (max-width: 560px) { .map-hint { width: max-content; max-width: 90vw; font-size: .8rem; text-align: center; border-radius: 14px; } }
+
+/* ---------- Snow overlay ---------- */
+.snow-layer {
+  position: fixed; inset: 0; z-index: 1000; pointer-events: none; transition: opacity 1.2s ease;
+  /* reset popover UA styles */
+  width: auto; height: auto; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden;
+}
+.snow-layer.is-fading { opacity: 0; }
+.snow-layer canvas { position: absolute; inset: 0; }
+.snow-caption {
+  position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); margin: 0;
+  padding: 12px 28px; border-radius: 12px; background: rgba(29, 29, 31, .9); color: #fff;
+  font: italic 600 clamp(1.4rem, 4vw, 2.4rem) var(--font-display);
+  animation: caption-in .8s ease-out;
+}
+@keyframes caption-in { from { opacity: 0; transform: translate(-50%, 12px); } }

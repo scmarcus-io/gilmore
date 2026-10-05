@@ -1,0 +1,125 @@
+/* Base tokens, typography, header, buttons, dialog. */
+:root {
+  /* Palette: autumn small town. Text pairs checked for WCAG AA contrast. */
+  --cream: #f6eedb;
+  --paper: #fbf6ea;
+  --coffee: #3b2a1f;       /* body text on cream: ~12:1 */
+  --coffee-soft: #5c4433;  /* secondary text on cream: ~8:1 */
+  --forest: #2f5233;
+  --flannel: #9e2b25;      /* buttons, white text: ~6.9:1 */
+  --flannel-dark: #6e1c18;
+  --plum: #5a2d55;
+  --ink: #1d1d1f;
+
+  /* Map scenery */
+  --grass: #7a9a4f; --grass-light: #8fae5e; --path: #d9c7a0;
+  --road: #6b6259; --road-line: #e8dcc0; --shadow: rgba(30, 20, 10, .22);
+  --trunk: #5b3a24; --leaf-red: #b4412f; --leaf-orange: #d9772b; --leaf-gold: #e2b33c;
+  --leaf-rust: #8f3b1f; --leaf-highlight: #fff;
+  --white-paint: #f7f3ea; --trim: #f1e8d6; --trim-dark: #3d3a35; --window: #f7d98a;
+  --bulb: #ffe08a; --door: #4a2f22; --door-green: #2f5233;
+  --brick: #a2533f; --brick-dark: #7b3a2c; --butter: #f2dc9b; --butter-dark: #d7a54a;
+  --pink: #d97a8a; --pink-soft: #f7d6dc; --inn: #eae0c8; --roof-slate: #4c5a68;
+  --roof-green: #3e5f3d; --roof-brown: #6a4630; --roof-plum: #6b3b66; --lavender: #d9c8e0;
+  --clapboard: #d8cfbd; --crate: #b6874f; --apple: #b8322a; --pumpkin: #d9772b;
+  --cork: #b98a5a; --postit-yellow: #fbe7a1; --postit-pink: #f7c6d0; --postit-blue: #c7e1f0;
+  --skin: #e9c19e;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --font-type: 'Special Elite', 'Courier New', monospace;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  --header-h: 64px;
+  --radius: 10px;
+  --focus: 3px solid #1a5fb4;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-body);
+  color: var(--coffee);
+  background: var(--cream);
+  line-height: 1.6;
+}
+body.mode-town { overflow: hidden; height: 100dvh; }
+
+:focus-visible { outline: var(--focus); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute; left: 8px; top: -60px; z-index: 100;
+  background: var(--coffee); color: var(--cream); padding: 8px 14px; border-radius: 6px;
+}
+.skip-link:focus { top: 8px; }
+
+/* ---------- Header ---------- */
+.site-header {
+  position: fixed; inset: 0 0 auto 0; height: var(--header-h); z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 clamp(12px, 3vw, 32px);
+  background: color-mix(in srgb, var(--cream) 92%, transparent);
+  border-bottom: 3px double var(--coffee);
+  backdrop-filter: blur(6px);
+}
+.brand {
+  margin: 0; display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+}
+.brand__cup {
+  width: 26px; height: 22px; border: 3px solid var(--coffee); border-top: 0;
+  border-radius: 0 0 10px 10px; position: relative; background: var(--paper);
+}
+.brand__cup::after {
+  content: ''; position: absolute; right: -10px; top: 3px; width: 8px; height: 9px;
+  border: 3px solid var(--coffee); border-left: 0; border-radius: 0 8px 8px 0;
+}
+.site-header__actions { display: flex; gap: 10px; }
+.btn { white-space: nowrap; }
+@media (max-width: 560px) {
+  .site-header { gap: 8px; }
+  .brand { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .site-header__actions { gap: 6px; flex: none; }
+  .site-header .btn { padding: 6px 12px; font-size: .88rem; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; padding: 8px 18px; /* 44px: WCAG 2.2 target size, comfortably */
+  font: 600 1rem var(--font-body); text-decoration: none; cursor: pointer;
+  color: #fff; background: var(--flannel); border: 2px solid var(--flannel-dark); border-radius: 999px;
+  transition: transform .15s ease, background .15s ease;
+}
+.btn:hover { background: var(--flannel-dark); transform: translateY(-1px); }
+.btn[aria-disabled='true'] { opacity: .65; cursor: not-allowed; }
+.btn--ghost { color: var(--coffee); background: transparent; border-color: var(--coffee); }
+.btn--ghost:hover { background: var(--coffee); color: var(--cream); }
+
+/* ---------- Location dialog ---------- */
+.location-dialog {
+  width: min(960px, 94vw); max-height: 88dvh; padding: 0; border: 0;
+  border-radius: 14px; background: var(--paper); color: var(--coffee);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+  display: flex; flex-direction: column;
+}
+.location-dialog:not([open]) { display: none; }
+.location-dialog::backdrop { background: rgba(28, 20, 14, .55); backdrop-filter: blur(3px); }
+.location-dialog[open] { animation: door-open .35s ease-out; }
+@keyframes door-open { from { opacity: 0; transform: scale(.94) translateY(12px); } }
+.location-dialog__bar {
+  margin: 0; padding: 10px 14px; border-bottom: 2px dashed var(--clapboard);
+  background: var(--cream); position: sticky; top: 0;
+}
+.location-dialog__content { overflow-y: auto; padding: 0 clamp(16px, 4vw, 40px) 32px; }
+
+/* ---------- Placeholders ---------- */
+.blank {
+  color: var(--coffee-soft); font-style: italic;
+  background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(59, 42, 31, .06) 6px 12px);
+  border-bottom: 1px dashed var(--coffee-soft); padding: 0 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
